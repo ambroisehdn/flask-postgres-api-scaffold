@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: db
+    image: "postgres:14.4"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root"]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      #- ./sql:/docker-entrypoint-initdb.d/:ro # turn it on, if you need run init DB
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: project-api
+      POSTGRES_HOST: postgres
+    networks:
+      - project-network
+    ports:
+      - "5432:5432"
+
+  pgadmin:
+    container_name: pgadmin
+    image: "dpage/pgadmin4:5.1"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: postgres@account.com
+      PGADMIN_DEFAULT_PASSWORD: postgres
+    ports:
+      - "5050:80"
+    depends_on:
+      - "postgres"
+    networks:
+      - project-network
+
+  app:
+    build: .
+    image: project-dev-image
+    container_name: project-dev-api
+    command: /usr/bin/supervisord
+    depends_on:
+      - "postgres"
+    volumes:
+      - appdata:/usr/src/app
+      # - ./logs:/usr/src/app/logs
+    ports:
+      - '127.0.0.1:19011:19011'
+    networks:
+      - project-network
+
+volumes:
+  postgres_data:
+  appdata:
+    driver: local
+    
+networks:
+  project-network:
+    driver: bridge

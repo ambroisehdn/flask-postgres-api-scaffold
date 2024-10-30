@@ -1,0 +1,155 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "project API ",
+        "version": "1.0.0",
+        "description": "project API"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:19011/api/v3",
+            "description": "Local development server"
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\""
+            }
+        },
+        "headers": {
+            "AuthorizationHeader": {
+                "description": "Bearer token for authorization",
+                "schema": {
+                    "type": "string",
+                    "example": "Bearer eyJhbGciOiJSUzI1NijZSI6ImY3MDEwZjdkLWFmYzItNGZDauAeyJhbGciOiJSUzI1NijZSI6ImY3MDEwZjdkLWFmYzItNG"
+                }
+            }
+        },
+        "parameters": {
+            "AuthorizationHeader": {
+              "in": "header",
+              "name": "Authorization",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "example": "Bearer eyJhbGciOiJSUzI1NijZSI6ImY3MDEwZjdkLWFmYzItNGZDauAeyJhbGciOiJSUzI1NijZSI6ImY3MDEwZjdkLWFmYzItNG"
+              },
+              "description": "Bearer token for authorization"
+            }
+        },
+        "schemas": {
+            "BaseResponse": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Request response"
+                    },
+                    "statusCode": {
+                        "type": "integer",
+                        "example": "200"
+                    }
+                }
+            }
+        },
+        "responses": {
+            "400Response": {
+                "description": "Bad request",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/components/schemas/BaseResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "example": {
+                                                "error": {}
+                                            }
+                                        },
+                                        "statusCode": {
+                                            "type": "integer",
+                                            "example": 400
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "404Response": {
+                "description": "Resource not found",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/components/schemas/BaseResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "statusCode": {
+                                            "type": "integer",
+                                            "example": 400
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "500Response": {
+                "description": "Internal server error",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/components/schemas/BaseResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "statusCode": {
+                                            "type": "integer",
+                                            "example": 500
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "security": [
+        {
+            "BearerAuth": []
+        }
+    ],
+    "tags": [
+        {
+            "name": "default",
+            "description": "Operations related to service default"
+        }
+    ],
+    "paths": {
+        
+    }
+}
