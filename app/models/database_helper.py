@@ -59,9 +59,34 @@ class DatabaseHelper:
         return model.query.get(record_id)
 
     @staticmethod
-    def get_all_records(model):
-        """Fetch all records of a model."""
-        return model.query.all()
+    def get_records(model, **filters):
+        """
+        Fetch records of a model with optional filter conditions.
+
+        :param model: The model to query.
+        :param filters: Keyword arguments representing the filter conditions.
+        :return: A list of matching records.
+        """
+        query = model.query
+        if filters:
+            query = query.filter_by(**filters)
+        return query.all()
+
+    @staticmethod
+    def delete_record(model, record_id):
+    """
+    Permanently delete a record from the database.
+    
+    :param model: The model class to delete from.
+    :param record_id: The ID of the record to delete.
+    :return: True if the record was found and deleted, False otherwise.
+    """
+    record = model.query.get(record_id)
+    if record:
+        db.session.delete(record)
+        db.session.commit()
+        return True
+    return False
 
     @staticmethod
     def soft_delete_record(model, record_id):
